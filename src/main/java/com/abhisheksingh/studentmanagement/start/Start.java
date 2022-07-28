@@ -9,13 +9,13 @@ public class Start {
     private static final String USERNAME = "hr";
     private static final String PASSWORD = "hr";
 
-    public static final String CREATE_TABLE_QUERY = """
-            CREATE TABLE IF NOT EXISTS MY_STUDENTS 
-            NAME VARCHAR (20) , DEFAULT 'NO NAME'
-            AGE NUMBER(5) , NOT NULL
-            CLASS VARCHAR(20) , NOT NULL
-            DOB DATE , NOT NULL
-            """;
+//    public static final String CREATE_TABLE_QUERY = """
+//            CREATE TABLE IF NOT EXISTS MY_STUDENTS
+//            NAME VARCHAR (20) , DEFAULT 'NO NAME'
+//            AGE NUMBER(5) , NOT NULL
+//            CLASS VARCHAR(20) , NOT NULL
+//            DOB DATE , NOT NULL
+//            """;
     static {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -24,35 +24,29 @@ public class Start {
         }
     }
 
-    private static void getAllEmployees(final Statement statement) throws SQLException {
-        statement.execute("SELECT * FROM EMPLOYEES");
+    private static void getAllStudents (final Statement statement) throws SQLException {
+        statement.executeQuery("SELECT * FROM SCHOOL_STUDENTS");
     }
 
-    private static void getAllEmployeesInRange(final Statement statement,
-                                               final int lowerBound,
-                                               final int upperBound) throws SQLException {
-        statement.execute("SELECT * FROM EMPLOYEES WHERE salary in  (" + lowerBound + "," + upperBound + ")");
+    private static void getAllStudentsInGradeRange(final Statement statement,
+                                               final String lowerBound,
+                                               final String upperBound) throws SQLException {
+        statement.executeQuery("SELECT * FROM SCHOOL_STUDENTS WHERE GRADE in  (" + lowerBound + "," + upperBound + ")");
     }
 
     public static void main(String[] args) throws SQLException {
         final var connection = DriverManager.getConnection(URL,USERNAME,PASSWORD);
         final var statement = connection.createStatement();
-        getAllEmployees(statement);
-        getAllEmployeesInRange(statement, 2000, 6000);
+        getAllStudents(statement);
+//        getAllStudentsInGradeRange(statement, "XI", "XII");
         final var resultSet = statement.getResultSet();
         while (resultSet.next()) {
-            for (int i = 1; i <= resultSet.getFetchSize(); i++) {
-                System.out.print(resultSet.getString(i) + " ");
-            }
 
-            System.out.println();
+                System.out.println(resultSet.getString("Name"));
+
+
+//            System.out.println();
         }
 
-//        try {
-//            Class.forName("com.abhisheksingh.studentmanagement.start.Xyz").getDeclaredConstructor().newInstance();
-//        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException |
-//                 NoSuchMethodException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 }
